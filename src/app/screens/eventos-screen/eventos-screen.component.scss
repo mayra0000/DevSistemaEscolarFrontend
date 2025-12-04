@@ -1,0 +1,140 @@
+// Compensa el sidebar en desktop
+.main-content-eventos {
+  margin-left: 220px;
+  transition: margin-left 0.3s;
+}
+
+@media (max-width: 991px) {
+  .main-content-eventos {
+    margin-left: 0;
+  }
+}
+.wrapper{
+  height: auto;
+}
+
+.header-home,
+.header-home-eventos {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.body-eventos {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.container {
+  max-width: 90vw;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Alertas y Títulos */
+.alert-primary {
+  color: #004085;
+  background-color: #cce5ff;
+  border-color: #b8daff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.07);
+  width: 100%;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.alert .title-table {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.title-table{
+  margin-left: 3rem;
+  font-size: 28px;
+  text-align: left;
+  font-family: Nexa-Bold;
+  letter-spacing: 0px;
+  text-transform: capitalize;
+  opacity: 1;
+}
+
+.title-perfil {
+  margin-left: 3rem;
+  font-size: clamp(1.375rem, 1.1rem + 1.2vw, 2.25rem);
+  text-align: left;
+  color: #231F20;
+  display: block;
+  font-family: Nexa-Bold;
+}
+
+/* Tabla y Scroll */
+.table-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  min-height: 1px;
+  margin: 0 auto;
+  background: var(--table-bg, #fff);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+}
+
+table {
+  min-width: 1200px;
+  width: 100%;
+  padding-bottom: 1.5rem;
+}
+
+::ng-deep .mat-mdc-table{
+  table-layout: fixed!important;
+}
+
+.mat-mdc-header-cell {
+  border-bottom-color: var(--table-header-border, #231F20);
+  font-family: Nexa-Bold!important;
+  font-size: 18px;
+  text-align: left;
+  color: var(--text-main, #fff)!important;
+}
+
+.mat-mdc-cell {
+  text-align: left;
+  font-family: Nexa!important;
+  font-size: 15px!important;
+}
+
+/* Acciones (Editar/Eliminar) */
+.td-editar {
+  color: #0092B8 !important;
+  cursor: pointer !important;
+  font-size: 20px !important;
+  text-align: center;
+}
+.td-editar:hover {
+  color: #006179 !important;
+  font-size: 25px !important;
+}
+.td-eliminar {
+  color: #E84150 !important;
+  cursor: pointer !important;
+  font-size: 20px !important;
+  text-align: center;
+}
+.td-eliminar:hover {
+  color: #ce1626 !important;
+  font-size: 25px !important;
+}
+
+/* Media Queries (Copiadas del componente original para consistencia) */
+@media (max-width: 575px) {
+  .title-perfil, .title-table {
+    margin-left: 0;
+    text-align: center;
+  }
+}

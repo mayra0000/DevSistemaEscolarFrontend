@@ -1,0 +1,99 @@
+<div class="wrapper main-content-eventos">
+  <div class="header-home-eventos"></div>
+  
+  <div class="body-eventos">
+    <!-- Encabezado con los títulos de bienvenida y rol del usuario -->
+    <div class="row mt-5 mb-5">
+      <div class="col-12">
+        <span class="title-perfil">Bienvenid@ {{name_user}}</span>
+        <br>
+        <span class="title-perfil">{{rol}}</span>
+      </div>
+      <!-- Contenedor principal para la tabla de eventos -->
+      <div class="container">
+        <div class="row mt-3 mb-5" style="text-align: center;">
+          <div class="col-12">
+            <div class="alert alert-primary" role="alert">
+              <span class="title-table">Lista de eventos académicos</span>
+            </div>
+          </div>
+          <!-- Campo de búsqueda -->
+          <div class="row mb-3">
+            <div class="col-12">
+              <mat-form-field appearance="outline" style="width: 100%; max-width: 500px; margin: 0 auto; display: block;">
+                <mat-label>Buscar evento</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Conferencia de IA">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- Colocamos la tabla de eventos -->
+          <ng-container>
+            <div class="table-scroll-wrapper">
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort style="min-width: 1200px; width: 100%;">
+                  
+                  <ng-container matColumnDef="id">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="nombre_evento">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre del Evento </th>
+                      <td mat-cell *matCellDef="let element"> {{element.nombre_evento}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="tipo_evento">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                      <td mat-cell *matCellDef="let element"> {{element.tipo_evento}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="fecha">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fecha | date: 'dd/MM/yyyy':'UTC'}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="horario">
+                      <th mat-header-cell *matHeaderCellDef> Horario </th>
+                      <td mat-cell *matCellDef="let element"> {{element.hora_inicio}} - {{element.hora_final}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lugar">
+                    <th mat-header-cell *matHeaderCellDef> Lugar </th>
+                    <td mat-cell *matCellDef="let element"> {{element.lugar}} </td>
+                  </ng-container>
+
+                   <ng-container matColumnDef="responsable">
+                    <th mat-header-cell *matHeaderCellDef> Responsable </th>
+                    <td mat-cell *matCellDef="let element"> {{element.nombre_responsable || 'Sin asignar'}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="editar">
+                    <th mat-header-cell *matHeaderCellDef> Actualizar </th>
+                    <td mat-cell *matCellDef="let element" class="td-editar">
+                      <i class="bi bi-pencil-square" (click)="goEditar(element.id)"></i>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="eliminar">
+                    <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+                    <td mat-cell *matCellDef="let element" class="td-eliminar">
+                      <i class="bi bi-trash3-fill" (click)="delete(element.id)"></i>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                aria-label="Select page of events" style="min-width: 1200px; width: 100%;">
+              </mat-paginator>
+            </div>
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

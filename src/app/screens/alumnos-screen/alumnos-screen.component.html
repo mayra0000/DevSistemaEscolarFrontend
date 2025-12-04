@@ -1,0 +1,144 @@
+<div class="wrapper main-content-alumnos">
+  <div class="header-home-alumnos">
+  </div>
+  <div class="body-alumnos">
+    <!-- Encabezado con los títulos de bienvenida y rol del usuario -->
+    <div class="row mt-5 mb-5">
+      <div class="col-12">
+        <span class="title-perfil">Bienvenid@ {{name_user}}</span>
+        <br>
+        <span class="title-perfil">{{rol}}</span>
+      </div>
+      <!-- Contenedor principal para la tabla de alumnos -->
+      <div class="container">
+        <div class="row mt-3 mb-5" style="text-align: center;">
+          <div class="col-12">
+            <div class="alert alert-primary" role="alert">
+              <span class="title-table">Lista de alumnos registrados</span>
+            </div>
+          </div>
+          <!-- Campo de búsqueda -->
+          <div class="row mb-3">
+            <div class="col-12">
+              <mat-form-field appearance="outline" style="width: 100%; max-width: 500px; margin: 0 auto; display: block;">
+                <mat-label>Buscar por nombre</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Luis García">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- Colocamos la tabla de alumnos -->
+          <!--<ng-container  *ngIf="lista_alumnos.length > 0; else noData"> -->
+          <ng-container>
+            <div class="table-scroll-wrapper">
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort style="min-width: 1200px; width: 100%;">
+                  <!-- 1era columna -->
+                  <ng-container matColumnDef="matricula">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="matricula"> ID alumno </th>
+                      <td mat-cell *matCellDef="let element"> {{element.matricula}} </td>
+                  </ng-container>
+
+                  <!-- 2da columna -->
+                  <ng-container matColumnDef="nombre">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="first_name">Nombre</th>
+                      <td mat-cell *matCellDef="let element"> {{element.first_name}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="apellidos">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="last_name">Apellidos</th>
+                      <td mat-cell *matCellDef="let element">{{element.last_name}} </td>
+                  </ng-container>
+                  <!-- 2da y 1 columna 
+                  <ng-container matColumnDef="matricula">
+                      <th mat-header-cell *matHeaderCellDef> Matrícula </th>
+                      <td mat-cell *matCellDef="let element"> {{element.matricula}} </td>
+                  </ng-container>-->
+
+                  <!-- 3era columna -->
+                  <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef> Correo electrónico </th>
+                    <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                  </ng-container>
+
+                  <!-- 4ta columna -->
+                  <ng-container matColumnDef="fecha_nacimiento">
+                      <th mat-header-cell *matHeaderCellDef> Fecha nacimiento </th>
+                      <td mat-cell *matCellDef="let element"> {{element.fecha_nacimiento | date: 'dd/MM/yyyy':'UTC'}} </td>
+                  </ng-container>
+
+                  <!-- 5ta columna CURP-->
+                  <ng-container matColumnDef="curp">
+                      <th mat-header-cell *matHeaderCellDef> CURP </th>
+                      <td mat-cell *matCellDef="let element"> {{element.curp}} </td>
+                  </ng-container>
+
+                  <!-- 6ta columna -->
+                  <ng-container matColumnDef="rfc">
+                      <th mat-header-cell *matHeaderCellDef> RFC </th>
+                      <td mat-cell *matCellDef="let element"> {{element.rfc}} </td>
+                  </ng-container>
+                  <!-- 7ta columna -->
+                  <ng-container matColumnDef="edad">
+                    <th mat-header-cell *matHeaderCellDef> Edad </th>
+                    <td mat-cell *matCellDef="let element"> {{element.edad}} </td>
+                  </ng-container>
+
+                  <!-- 8ma columna -->
+                  <ng-container matColumnDef="telefono">
+                      <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+                      <td mat-cell *matCellDef="let element"> {{element.telefono}} </td>
+                  </ng-container>
+
+                  <!-- 9va columna -->
+                  <ng-container matColumnDef="ocupacion">
+                    <th mat-header-cell *matHeaderCellDef> Ocupación </th>
+                    <td mat-cell *matCellDef="let element"> {{element.ocupacion}} </td>
+                  </ng-container>
+
+                  <!-- 10ma columna - Editar -->
+                  <ng-container matColumnDef="editar">
+                    <th mat-header-cell *matHeaderCellDef> Actualizar </th>
+                    <td mat-cell *matCellDef="let element" class="td-editar">
+                      <i class="bi bi-pencil-square" (click)="goEditar(element.id)"></i>
+                    </td>
+                  </ng-container>
+
+                  <!-- 11a columna - Eliminar -->
+                  <ng-container matColumnDef="eliminar">
+                    <th mat-header-cell *matHeaderCellDef> Eliminar </th>
+                    <td mat-cell *matCellDef="let element" class="td-eliminar">
+                      <i class="bi bi-trash3-fill" (click)="delete(element.id)"></i>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                  <!-- Mensaje cuando no hay resultados -->
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+                      <div class="alert alert-warning" role="alert">
+                        No se encontraron alumnos con ese criterio de búsqueda.
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!-- Colocamos la paginación de la tabla -->
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                aria-label="Select page of periodic elements" style="min-width: 1200px; width: 100%;">
+              </mat-paginator>
+            </div>
+          </ng-container>
+          <ng-template #noData>
+            <div class="col-12">
+              <div class="alert alert-warning" role="alert">
+                No hay alumnos registrados.
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
