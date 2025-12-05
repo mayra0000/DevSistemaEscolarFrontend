@@ -42,7 +42,7 @@ export class GraficasScreenComponent implements OnInit{
           '#ffe944ff',
           '#5098bcff',
           '#b45fb0ff',
-          '#5bb56cff'
+          '#63bb73ff'
         ]
       }
     ]
