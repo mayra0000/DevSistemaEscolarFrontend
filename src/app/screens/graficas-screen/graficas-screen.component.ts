@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
 import { AdministradoresService } from 'src/app/services/administradores.service';
+import { EventosService } from 'src/app/services/eventos.service';
 
 @Component({
   selector: 'app-graficas-screen',
@@ -15,28 +16,27 @@ export class GraficasScreenComponent implements OnInit{
   public total_user: any = {};
 
   //Histograma
-  lineChartData = {
-    labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  // --- Gráfica Lineal: Eventos por Mes ---
+  lineChartData: any = {
+    labels: [], // Se llenará dinámicamente
     datasets: [
       {
-        data:[89, 34, 43, 54, 28, 74, 93],
-        label: 'Registro de materias',
-        backgroundColor: '#F88406'
+        data: [], // Se llenará dinámicamente
+        label: 'Eventos por Mes',
+        backgroundColor: '#f8060662'
       }
     ]
-  }
-  lineChartOption = {
-    responsive:false
-  }
+  };
+  lineChartOption = { responsive: false };
   lineChartPlugins = [ DatalabelsPlugin ];
 
-  //Barras
-  barChartData = {
-    labels: ["Congreso", "FePro", "Presentación Doctoral", "Feria Matemáticas", "T-System"],
+  // --- Gráfica de Barras: Eventos por Tipo ---
+  barChartData: any = {
+    labels: [], // Se llenará dinámicamente
     datasets: [
       {
-        data:[34, 43, 54, 28, 74],
-        label: 'Eventos Académicos',
+        data: [],
+        label: 'Eventos por Tipo',
         backgroundColor: [
           '#e8a45cff',
           '#ffe944ff',
@@ -46,10 +46,8 @@ export class GraficasScreenComponent implements OnInit{
         ]
       }
     ]
-  }
-  barChartOption = {
-    responsive:false
-  }
+  };
+  barChartOption = { responsive: false };
   barChartPlugins = [ DatalabelsPlugin ];
 
   //Circular
@@ -93,11 +91,13 @@ export class GraficasScreenComponent implements OnInit{
   doughnutChartPlugins = [ DatalabelsPlugin ];
 
   constructor(
-    private administradoresServices: AdministradoresService
+    private administradoresServices: AdministradoresService,
+    private eventosService: EventosService
   ) { }
 
   ngOnInit(): void {
     this.obtenerTotalUsers();
+    this.obtenerDatosEventos();
   }
 
   // Función para obtener el total de usuarios registrados
@@ -123,6 +123,64 @@ export class GraficasScreenComponent implements OnInit{
         alert("No se pudo obtener el total de cada rol de usuarios");
       }
     );
+  }
+
+  public obtenerDatosEventos() {
+    this.eventosService.obtenerListaEventos().subscribe(
+      (eventos: any[]) => {
+        console.log("Eventos obtenidos:", eventos);
+        this.procesarGraficasEventos(eventos);
+      },
+      (error) => {
+        console.error("Error al obtener eventos:", error);
+      }
+    );
+  }
+
+  public procesarGraficasEventos(eventos: any[]) {
+    // 1. Procesar para Gráfica de BARRAS (Por Tipo de Evento)
+    const conteoTipos: any = {};
+    
+    eventos.forEach(evento => {
+      const tipo = evento.tipo_evento || 'Sin Tipo';
+      conteoTipos[tipo] = (conteoTipos[tipo] || 0) + 1;
+    });
+
+    const labelsBarras = Object.keys(conteoTipos);
+    const dataBarras = Object.values(conteoTipos);
+
+    this.barChartData = {
+      labels: labelsBarras,
+      datasets: [{
+        ...this.barChartData.datasets[0],
+        data: dataBarras,
+        label: 'Cantidad por Tipo'
+      }]
+    };
+
+    // 2. Procesar para Gráfica LINEAL (Por Mes)
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const conteoMeses = new Array(12).fill(0);
+
+    eventos.forEach(evento => {
+      // Asumiendo que evento.fecha viene en formato ISO o fecha válida (YYYY-MM-DD)
+      const fecha = new Date(evento.fecha);
+      const mesIndex = fecha.getMonth(); // 0 = Enero, 11 = Diciembre
+      
+      // Validamos que sea una fecha válida
+      if (!isNaN(mesIndex)) {
+        conteoMeses[mesIndex]++;
+      }
+    });
+
+    this.lineChartData = {
+      labels: meses,
+      datasets: [{
+        ...this.lineChartData.datasets[0],
+        data: conteoMeses,
+        label: 'Eventos por Mes'
+      }]
+    };
   }
 
 }
