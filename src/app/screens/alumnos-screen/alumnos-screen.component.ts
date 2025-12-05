@@ -21,7 +21,7 @@ export class AlumnosScreenComponent implements OnInit {
   public lista_alumnos: any[] = [];
 
   //Para la tabla
-  displayedColumns: string[] = ['matricula', 'nombre','apellidos','email', 'fecha_nacimiento', 'curp', 'rfc', 'edad', 'telefono',"ocupacion", 'editar', 'eliminar'];
+  displayedColumns: string[] = ['matricula', 'nombre','apellidos','email', 'fecha_nacimiento', 'curp', 'rfc', 'edad', 'telefono',"ocupacion"];
   dataSource = new MatTableDataSource<DatosAlumno>(this.lista_alumnos as DatosAlumno []);
 
    @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -44,6 +44,11 @@ export class AlumnosScreenComponent implements OnInit {
     if(this.token == ""){
       this.router.navigate(["/"]);
     }
+
+    if (this.isAdmin()) {
+      this.displayedColumns.push('editar', 'eliminar');
+    }
+
     //Obtener alumnos
     this.obtenerAlumnos();
   }
@@ -99,7 +104,13 @@ export class AlumnosScreenComponent implements OnInit {
   }
 
   public goEditar(idUser: number) {
-    this.router.navigate(["registro-usuarios/alumno/"+idUser]);
+     // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar
+    const userIdSession = Number(this.facadeService.getUserId());
+    if (this.rol === 'administrador' || this.rol === 'maestro' ) {
+      this.router.navigate(["registro-usuarios/alumno/"+idUser]);
+    }else{
+      alert("No tienes permisos para editar este alumno.");
+    }
   }
 
   public delete(idUser: number) {
@@ -129,7 +140,11 @@ export class AlumnosScreenComponent implements OnInit {
         }else{
           alert("No tienes permisos para eliminar este alumno.");
         }
-      }
+  }
+
+  public isAdmin(): boolean {
+    return this.rol === 'administrador';
+  }
 }
 
 export interface DatosAlumno {

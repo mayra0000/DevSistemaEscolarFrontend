@@ -98,7 +98,13 @@ export class MaestrosScreenComponent implements OnInit {
   }
 
   public goEditar(idUser: number) {
-    this.router.navigate(["registro-usuarios/maestro/"+idUser]);
+     // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar
+    const userIdSession = Number(this.facadeService.getUserId());
+    if (this.rol === 'administrador' || (this.rol === 'maestro' && userIdSession === idUser)) {
+      this.router.navigate(["registro-usuarios/maestro/"+idUser]);
+    }else{
+      alert("No tienes permisos para editar este maestro.");
+    }
   }
 
   public delete(idUser: number) {
